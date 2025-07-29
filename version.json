@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.4",
   "url": "https://github.com/CharonXXIII/Pixel_Legacy_Installer/releases/download/1.0.3/Update.zip",
-  "changelog": "Removed an icon causing confusion"
+  "changelog": "Added cleanup for updated files"
 }
