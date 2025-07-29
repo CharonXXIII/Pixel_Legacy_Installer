@@ -1,5 +1,5 @@
 {
   "version": "1.0.2",
   "url": "https://github.com/CharonXXIII/Pixel_Legacy_Installer/releases/download/1.0.2/Update.zip",
-  "changelog": "More specific update text"
+  "changelog": "Fixed HTTPS headers"
 }
