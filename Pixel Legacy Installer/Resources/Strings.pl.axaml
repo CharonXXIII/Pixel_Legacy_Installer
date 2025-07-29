@@ -1,0 +1,15 @@
+﻿<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="Pixel_Legacy_Installer.Resources.Strings_pl">
+
+	<x:String x:Key="PlayPixelWorlds">Zagraj w Pixel Worlds</x:String>
+	<x:String x:Key="DownloadGame">Pobierz Pixel Worlds</x:String>
+	<x:String x:Key="DownloadDiscordRPCGame">Pobierz wersję RPC Pixel Worlds</x:String>
+	<x:String x:Key="ConnectToServer">Połącz z serwerem</x:String>
+	<x:String x:Key="Disconnect">Rozłącz</x:String>
+	<x:String x:Key="InstallCerts">Zainstaluj certyfikaty</x:String>
+	<x:String x:Key="UninstallCerts">Odinstaluj certyfikaty</x:String>
+	<x:String x:Key="ReadMe">Przeczytaj mnie</x:String>
+	<x:String x:Key="ReadMeText">Aby zacząć grać w Pixel Legacy, możesz najpierw pobrać Pixel Worlds lub wersję Discord RPC Pixel Worlds. Po zakończeniu kliknij „Połącz z serwerem”, następnie zainstaluj certyfikaty, a potem będziesz mógł kliknąć „Graj w Pixel Worlds”.</x:String>
+</ResourceDictionary>

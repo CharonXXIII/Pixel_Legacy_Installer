@@ -1,0 +1,23 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Pixel_Legacy_Installer.App"
+             xmlns:local="using:Pixel_Legacy_Installer"
+             RequestedThemeVariant="Default">
+
+	<Application.DataTemplates>
+		<local:ViewLocator/>
+	</Application.DataTemplates>
+
+	<Application.Styles>
+		<FluentTheme />
+
+		<!-- Custom font resource -->
+		<Style>
+			<Style.Resources>
+				<FontFamily x:Key="BlocktopiaFont">
+					/Assets/Blocktopia.ttf#Blocktopia
+				</FontFamily>
+			</Style.Resources>
+		</Style>
+	</Application.Styles>
+</Application>

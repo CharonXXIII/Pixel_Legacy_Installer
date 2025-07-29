@@ -1,0 +1,238 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Pixel_Legacy_Installer.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="1080"
+        x:Class="Pixel_Legacy_Installer.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/pixellegacy_main.ico"
+        Title="Pixel Legacy Launcher">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+
+	<Window.Background>
+		<ImageBrush Source="/Assets/mainLoadingScreen_Upscaled.png" Stretch="UniformToFill" />
+	</Window.Background>
+
+	<Grid>
+
+		<!-- Main UI content -->
+		<Grid Margin="20">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+
+			<Viewbox Stretch="Uniform" MaxWidth="900" Margin="0,0,0,20">
+				<Grid>
+					<!-- Shadow Effect -->
+					<TextBlock Text="Pixel Legacy Launcher"
+                               FontSize="100"
+                               FontWeight="Bold"
+                               FontFamily="{StaticResource BlocktopiaFont}"
+                               Foreground="Black"
+                               Margin="1,0,0,0"
+                               IsHitTestVisible="False" />
+					<TextBlock Text="Pixel Legacy Launcher"
+                               FontSize="100"
+                               FontWeight="Bold"
+                               FontFamily="{StaticResource BlocktopiaFont}"
+                               Foreground="Black"
+                               Margin="-1,0,0,0"
+                               IsHitTestVisible="False" />
+					<TextBlock Text="Pixel Legacy Launcher"
+                               FontSize="100"
+                               FontWeight="Bold"
+                               FontFamily="{StaticResource BlocktopiaFont}"
+                               Foreground="Black"
+                               Margin="0,1,0,0"
+                               IsHitTestVisible="False" />
+					<TextBlock Text="Pixel Legacy Launcher"
+                               FontSize="100"
+                               FontWeight="Bold"
+                               FontFamily="{StaticResource BlocktopiaFont}"
+                               Foreground="Black"
+                               Margin="0,-1,0,0"
+                               IsHitTestVisible="False" />
+					<TextBlock Text="Pixel Legacy Launcher"
+                               FontSize="100"
+                               FontWeight="Bold"
+                               FontFamily="{StaticResource BlocktopiaFont}"
+                               Foreground="White"
+                               HorizontalAlignment="Center" />
+				</Grid>
+			</Viewbox>
+
+			<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="10,0,10,0">
+				<ComboBox ItemsSource="{Binding Languages}"
+                          SelectedItem="{Binding SelectedLanguage}"
+                          Width="150" />
+			</StackPanel>
+		</Grid>
+
+		<!-- Centered content -->
+		<Viewbox Stretch="Uniform"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center">
+			<StackPanel Width="1000"
+                        Spacing="12"
+                        Margin="20">
+				<!-- Status text and progress -->
+				<StackPanel Margin="30">
+					<Grid>
+						<TextBlock Text="{Binding StatusMessage}"
+                                   FontFamily="{StaticResource BlocktopiaFont}"
+                                   Foreground="Black"
+                                   FontSize="24"
+                                   Margin="1,0,0,10"
+                                   IsHitTestVisible="False" />
+						<TextBlock Text="{Binding StatusMessage}"
+                                   FontFamily="{StaticResource BlocktopiaFont}"
+   
+                                   Foreground="Black"
+                                   FontSize="24"
+                                   Margin="-1,0,0,10"
+                                   IsHitTestVisible="False" />
+						<TextBlock Text="{Binding StatusMessage}"
+                                   FontFamily="{StaticResource BlocktopiaFont}"
+                                   Foreground="Black"
+                                   FontSize="24"
+                                   Margin="0,1,0,10"
+                                   IsHitTestVisible="False" />
+						<TextBlock Text="{Binding StatusMessage}"
+                                   FontFamily="{StaticResource BlocktopiaFont}"
+                                   Foreground="Black"
+                                   FontSize="24"
+                                   Margin="0,-1,0,10"
+                                   IsHitTestVisible="False" />
+						<TextBlock Text="{Binding StatusMessage}"
+                                   FontFamily="{StaticResource BlocktopiaFont}"
+                                   Foreground="White"
+                                   FontSize="24"
+                                   Margin="0,0,0,10" />
+					</Grid>
+
+					<ProgressBar Minimum="0"
+                                 Maximum="100"
+                                 Name="DownloadProgressBar"
+                                 IsVisible="false"
+                                 Value="{Binding DownloadProgress}"
+                                 Height="25"
+                                 Foreground="DarkGreen"
+                                 Background="LightGray"/>
+				</StackPanel>
+
+				<!-- Buttons -->
+				<Button Content="{DynamicResource PlayPixelWorlds}"
+                        FontSize="16"
+                        Padding="10"
+                        HorizontalContentAlignment="Center"
+                        Background="#80000000"
+                        BorderThickness="0"
+                        Foreground="White"
+                        FontFamily="{StaticResource BlocktopiaFont}"
+                        Command="{Binding PlayCommand}" />
+
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<Button Content="{DynamicResource DownloadDiscordRPCGame}"
+                            FontSize="16"
+                            Padding="10"
+                            HorizontalContentAlignment="Center"
+                            Background="#80000000"
+                            BorderThickness="0"
+                            Foreground="White"
+                            FontFamily="{StaticResource BlocktopiaFont}"
+                            Command="{Binding DownloadCommand}" />
+
+					<Button Content="{DynamicResource DownloadGame}"
+                            FontSize="16"
+                            Padding="10"
+                            HorizontalContentAlignment="Center"
+                            Background="#80000000"
+                            BorderThickness="0"
+                            Foreground="White"
+                            FontFamily="{StaticResource BlocktopiaFont}"
+                            Command="{Binding DownloadCommand}" />
+				</StackPanel>
+
+				<Separator Background="Black" Height="6" Margin="0" />
+
+				<Button Content="{DynamicResource ConnectToServer}"
+                        FontSize="16"
+                        Padding="10"
+                        HorizontalContentAlignment="Center"
+                        Background="#80000000"
+                        BorderThickness="0"
+                        Foreground="White"
+                        FontFamily="{StaticResource BlocktopiaFont}"
+                        Command="{Binding ConnectCommand}" />
+
+				<Button Content="{DynamicResource Disconnect}"
+                        FontSize="16"
+                        Padding="10"
+                        HorizontalContentAlignment="Center"
+                        Background="#80000000"
+                        BorderThickness="0"
+                        Foreground="White"
+                        FontFamily="{StaticResource BlocktopiaFont}"
+                        Command="{Binding DisconnectCommand}" />
+
+				<Separator Background="Black" Height="6" Margin="0" />
+
+				<Button Content="{DynamicResource InstallCerts}"
+                        FontSize="16"
+                        Padding="10"
+                        HorizontalContentAlignment="Center"
+                        Background="#80000000"
+                        BorderThickness="0"
+                        Foreground="White"
+                        FontFamily="{StaticResource BlocktopiaFont}"
+                        Command="{Binding InstallCertsCommand}" />
+
+				<Button Content="{DynamicResource UninstallCerts}"
+		FontSize="16"
+		Padding="10"
+		HorizontalContentAlignment="Center"
+		Background="#80000000"
+		BorderThickness="0"
+		Foreground="White"
+		FontFamily="{StaticResource BlocktopiaFont}"
+		Command="{Binding UninstallCertsCommand}" />
+
+				<Button Content="{DynamicResource ReadMe}"
+						FontSize="16"
+						Padding="10"
+						HorizontalContentAlignment="Center"
+						Background="#80000000"
+						BorderThickness="0"
+						Foreground="White"
+						FontFamily="{StaticResource BlocktopiaFont}"
+						Command="{Binding ReadMeCommand}" />
+			</StackPanel>
+		</Viewbox>
+
+		<Viewbox Width="72" Height="72"
+				 HorizontalAlignment="Right"
+				 VerticalAlignment="Bottom"
+				 Margin="20">
+			<Button Click="DiscordButton_Click"
+					BorderThickness="0"
+					Background="Transparent">
+				<Border Background="#FF7289DA"
+					CornerRadius="36"
+					Width="48"
+					Height="48"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center">
+					<Image Source="/Assets/discord.png"
+						   Stretch="Uniform"
+						   Margin="8" />
+				</Border>
+			</Button>
+		</Viewbox>
+
+	</Grid>
+</Window>
