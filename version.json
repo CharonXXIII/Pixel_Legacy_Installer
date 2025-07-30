@@ -1,5 +1,5 @@
 {
-  "version": "1.0.4",
-  "url": "https://github.com/CharonXXIII/Pixel_Legacy_Installer/releases/download/1.0.4/Update.zip",
-  "changelog": "Added cleanup for updated files"
+  "version": "1.0.5",
+  "url": "https://github.com/CharonXXIII/Pixel_Legacy_Installer/releases/download/1.0.5/Update.zip",
+  "changelog": "Added a player count checker so you can see how many people are online before launching the game."
 }
