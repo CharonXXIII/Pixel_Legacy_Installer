@@ -24,9 +24,17 @@ namespace Pixel_Legacy_Installer.ViewModels
     {
         private readonly HelperLocalization _localizationService;
 
+        private string _gistText;
+        public string GistText
+        {
+            get => _gistText;
+            set => SetProperty(ref _gistText, value);
+        }
+
         public MainWindowViewModel()
         {
             _localizationService = new HelperLocalization();
+            _ = LoadGistTextAsync();
 
             Languages = new ObservableCollection<string> { "en", "fi", "pl", "id", "tr" };
             SelectedLanguage = "en";
@@ -262,7 +270,6 @@ namespace Pixel_Legacy_Installer.ViewModels
                 await ShowMessageAsync(App.MainWindow!, StatusMessage);
             }
         }
-
 
         [RelayCommand]
         private async Task Connect()
@@ -549,14 +556,13 @@ namespace Pixel_Legacy_Installer.ViewModels
                 ButtonDefinitions = ButtonEnum.Ok,
                 ContentTitle = title,
                 ContentMessage = message,
-                Icon = Icon.Info,
+                Icon = Icon.None,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
             var msgBox = MessageBoxManager.GetMessageBoxStandard(messageBoxParams);
             await msgBox.ShowWindowDialogAsync(owner);
         }
-
 
         private async Task DownloadFileWithProgressAsync(string url, string destinationPath)
         {
@@ -611,6 +617,33 @@ namespace Pixel_Legacy_Installer.ViewModels
                 case "id": return "Indonesian";
                 case "tr": return "Turkish";
                 default: return code; // fallback to code if unknown
+            }
+        }
+
+        private async Task LoadGistTextAsync()
+        {
+            using var httpClient = new HttpClient();
+            try
+            {
+                string rawUrl = "https://gist.githubusercontent.com/CharonXXIII/3054376e2115f2dc2a43b7a1b545496d/raw";
+                string result = await httpClient.GetStringAsync(rawUrl);
+
+                // Apply the replacement
+                result = result.Replace("Player Count:", "Players Online:");
+
+                // Check for maintenance text
+                if (string.IsNullOrWhiteSpace(result) || result.Contains("maintenance", StringComparison.OrdinalIgnoreCase))
+                {
+                    GistText = "Possible Maintenance Break.";
+                }
+                else
+                {
+                    GistText = result;
+                }
+            }
+            catch (Exception ex)
+            {
+                GistText = $"Failed to fetch gist: {ex.Message}";
             }
         }
     }

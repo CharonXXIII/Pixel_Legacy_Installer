@@ -10,7 +10,7 @@ namespace Pixel_Legacy_Installer.Auto_Updater
     {
         public static class VersionInfo
         {
-            public const string CurrentVersion = "1.0.0";
+            public const string CurrentVersion = "1.0.5";
         }
 
     }

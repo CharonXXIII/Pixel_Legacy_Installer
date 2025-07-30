@@ -82,6 +82,38 @@
                         Margin="20">
 				<!-- Status text and progress -->
 				<StackPanel Margin="30">
+
+					<Grid>
+						<TextBlock Text="{Binding GistText}"
+		   FontFamily="{StaticResource BlocktopiaFont}"
+		   Foreground="White"
+		   FontSize="24"
+		   Margin="0,0,0,10" />
+						<TextBlock Text="{Binding GistText}"
+				 FontFamily="{StaticResource BlocktopiaFont}"
+				 Foreground="Black"
+				 FontSize="24"
+				 Margin="1,0,0,10"
+				 IsHitTestVisible="False" />
+						<TextBlock Text="{Binding GistText}"
+                                   FontFamily="{StaticResource BlocktopiaFont}"
+                                   Foreground="Black"
+                                   FontSize="24"
+                                   Margin="-1,0,0,10"
+                                   IsHitTestVisible="False" />
+						<TextBlock Text="{Binding GistText}"
+                                   FontFamily="{StaticResource BlocktopiaFont}"
+                                   Foreground="Black"
+                                   FontSize="24"
+                                   Margin="0,1,0,10"
+                                   IsHitTestVisible="False" />
+						<TextBlock Text="{Binding GistText}"
+                                   FontFamily="{StaticResource BlocktopiaFont}"
+                                   Foreground="White"
+                                   FontSize="24"
+                                   Margin="0,-1,0,10" />
+					</Grid>
+
 					<Grid>
 						<TextBlock Text="{Binding StatusMessage}"
                                    FontFamily="{StaticResource BlocktopiaFont}"

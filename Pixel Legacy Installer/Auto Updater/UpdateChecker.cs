@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using static Pixel_Legacy_Installer.Auto_Updater.AppVersion;
 using Pixel_Legacy_Installer.ViewModels;
 using System.IO;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace Pixel_Legacy_Installer.Auto_Updater
 {
@@ -23,15 +25,26 @@ namespace Pixel_Legacy_Installer.Auto_Updater
             try
             {
                 using var client = new HttpClient();
-                var json = await client.GetStringAsync("https://raw.githubusercontent.com/YourUsername/YourRepo/main/version.json");
+
+                // Required for GitHub raw and release URLs to work properly
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("PixelLegacyInstaller/1.0");
+
+                var jsonUrl = "https://raw.githubusercontent.com/CharonXXIII/Pixel_Legacy_Installer/master/version.json";
+                var json = await client.GetStringAsync(jsonUrl);
+
                 var latest = JsonSerializer.Deserialize<UpdateInfo>(json);
 
                 if (latest is null || string.IsNullOrEmpty(latest.Version))
+                {
+                    Debug.WriteLine("Version is newest (no version found)");
                     return;
+                }
 
                 if (latest.Version != VersionInfo.CurrentVersion)
                 {
-                    var message = $"A new version ({latest.Version}) is available!\n\nChanges:\n{latest.Changelog}\n\nDo you want to update now?";
+                    Debug.WriteLine("New version available");
+
+                    var message = $"A new version ({latest.Version}) is available!\n\nChanges:\n{latest.Changelog}\n\nDo you want to update now?\n\nDO NOT TURN CLOSE THE APP IF YOU ARE UPDATING. IT WILL AUTO-RESTART ONCE COMPLETE!";
                     var result = await MessageBoxManager
                         .GetMessageBoxStandard(new MessageBoxStandardParams
                         {
@@ -50,37 +63,66 @@ namespace Pixel_Legacy_Installer.Auto_Updater
 
                         var zipPath = Path.Combine(tempFolder, "update.zip");
 
-                        await using (var zipStream = await client.GetStreamAsync(latest.Url))
+                        // Download update.zip
+                        var response = await client.GetAsync(latest.Url);
+                        response.EnsureSuccessStatusCode();
+
+                        await using (var zipStream = await response.Content.ReadAsStreamAsync())
                         await using (var fileStream = File.Create(zipPath))
                         {
                             await zipStream.CopyToAsync(fileStream);
                         }
 
-                        // Extract ZIP safely
-                        ZipFile.ExtractToDirectory(zipPath, tempFolder);
+                        // Extract ZIP safely to temp folder
+                        ZipFile.ExtractToDirectory(zipPath, tempFolder, overwriteFiles: true);
 
-                        var currentExe = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName!;
+                        var currentExe = Process.GetCurrentProcess().MainModule?.FileName!;
                         var appDir = Path.GetDirectoryName(currentExe)!;
 
-                        // Copy new files into place
-                        foreach (var file in Directory.GetFiles(tempFolder, "*", SearchOption.AllDirectories))
+                        var updaterScript = Path.Combine(tempFolder, "update.bat");
+                        var cleanupScript = Path.Combine(tempFolder, "cleanup.bat");
+
+                        // cleanup.bat will run after update and remove the temp folder and files
+                        var cleanupBatch = $@"
+@echo off
+timeout /t 3 > nul
+if exist ""{zipPath}"" del /f /q ""{zipPath}""
+if exist ""{updaterScript}"" del /f /q ""{updaterScript}""
+if exist ""{cleanupScript}"" del /f /q ""{cleanupScript}""
+rd /s /q ""{tempFolder}""
+";
+
+                        // update.bat performs the update and launches cleanup.bat
+                        var updateBatch = $@"
+@echo off
+timeout /t 2 > nul
+
+:: Copy update files
+xcopy /E /Y /Q ""{tempFolder}"" ""{appDir}""
+
+:: Restart launcher
+start """" ""{currentExe}""
+
+:: Run cleanup in background
+start /min ""cleanup"" cmd /c ""\""{cleanupScript}\""""""
+";
+
+                        File.WriteAllText(updaterScript, updateBatch);
+                        File.WriteAllText(cleanupScript, cleanupBatch);
+
+                        Process.Start(new ProcessStartInfo
                         {
-                            var relativePath = Path.GetRelativePath(tempFolder, file);
-                            var destinationPath = Path.Combine(appDir, relativePath);
+                            FileName = updaterScript,
+                            CreateNoWindow = true,
+                            UseShellExecute = false
+                        });
 
-                            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
-                            File.Copy(file, destinationPath, overwrite: true);
-                        }
-
-                        await MainWindowViewModel.ShowMessageAsync(owner, "Update complete! The launcher will now restart.", "Updated");
-
-                        System.Diagnostics.Process.Start(currentExe);
                         Environment.Exit(0);
                     }
                 }
                 else
                 {
-                    await MainWindowViewModel.ShowMessageAsync(owner, "You're already on the latest version.");
+                    await MainWindowViewModel.ShowMessageAsync(owner, $"Running Version: {VersionInfo.CurrentVersion} Of Pixel Legacy Launcher!");
                 }
             }
             catch (Exception ex)
@@ -89,10 +131,16 @@ namespace Pixel_Legacy_Installer.Auto_Updater
             }
         }
 
+
         public class UpdateInfo
         {
+            [JsonPropertyName("version")]
             public string Version { get; set; }
+
+            [JsonPropertyName("url")]
             public string Url { get; set; }
+
+            [JsonPropertyName("changelog")]
             public string Changelog { get; set; }
         }
 

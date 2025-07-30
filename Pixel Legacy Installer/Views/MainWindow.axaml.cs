@@ -11,6 +11,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Interactivity;
 using System.Diagnostics;
 using Avalonia.Layout;
+using System.IO;
 
 namespace Pixel_Legacy_Installer.Views
 {
@@ -53,6 +54,7 @@ namespace Pixel_Legacy_Installer.Views
         protected override void OnOpened(EventArgs e)
         {
             base.OnOpened(e);
+            CleanupUpdateFiles();
             this.Width = 800;
             this.Height = 650;
         }
@@ -62,6 +64,32 @@ namespace Pixel_Legacy_Installer.Views
             if (DownloadProgressBar != null)
             {
                 DownloadProgressBar.IsVisible = DownloadProgressBar.Value != 0 && DownloadProgressBar.Value != 100;
+            }
+        }
+
+        private void CleanupUpdateFiles()
+        {
+            try
+            {
+                var currentExe = Process.GetCurrentProcess().MainModule?.FileName!;
+                var appDir = Path.GetDirectoryName(currentExe)!;
+
+                var updateZip = Path.Combine(appDir, "update.zip");
+                var updateBat = Path.Combine(appDir, "update.bat");
+                var cleanupBat = Path.Combine(appDir, "cleanup.bat");
+
+                if (File.Exists(updateZip))
+                    File.Delete(updateZip);
+
+                if (File.Exists(updateBat))
+                    File.Delete(updateBat);
+
+                if (File.Exists(cleanupBat))
+                    File.Delete(cleanupBat);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CleanupUpdateFiles error: {ex.Message}");
             }
         }
 
